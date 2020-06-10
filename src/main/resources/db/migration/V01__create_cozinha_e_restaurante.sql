@@ -1,0 +1,10 @@
+--CREATE TABLE cozinha(
+--    id INT PRIMARY KEY auto_increment,
+--    nome varchar(255));
+--
+--CREATE TABLE restaurante(
+--    id INT PRIMARY KEY auto_increment,
+--    nome varchar(255),
+--    taxa_frete DECIMAL,
+--    cozinha_id int,
+--    FOREIGN KEY (cozinha_id) REFERENCES cozinha(id));
