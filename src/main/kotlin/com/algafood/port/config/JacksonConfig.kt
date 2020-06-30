@@ -1,4 +1,4 @@
-package com.algafood.port.adapter
+package com.algafood.port.config
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.PropertyNamingStrategy

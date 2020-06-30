@@ -22,7 +22,7 @@ class CadastroCozinhaService(val cozinhaRepository: CozinhaRepository) {
         } catch (e: EmptyResultDataAccessException) {
             throw CozinhaNaoEncontradaException("Não existe um cadastro de cozinha com código $cozinhaId")
         } catch (e: DataIntegrityViolationException) {
-            throw EntidadeEmUsoException("Cozinha de código $cozinhaId não pode ser removida, pois está em uso")
+            throw CozinhaEmUsoException(cozinhaId, cause = e)
         }
     }
 }

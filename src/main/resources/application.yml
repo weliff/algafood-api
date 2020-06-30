@@ -4,6 +4,8 @@ management:
       exposure:
         include: '*'
 spring:
+#  main:
+#    lazy-initialization: true
   datasource:
     password: root
     url: jdbc:mysql://localhost/algafood?createDatabaseIfNotExist=true&serverTimezone=UTC

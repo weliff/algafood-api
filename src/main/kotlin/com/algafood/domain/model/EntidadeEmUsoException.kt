@@ -1,4 +1,3 @@
 package com.algafood.domain.model
 
-class EntidadeEmUsoException(msg: String) : RuntimeException(msg) {
-}
+open class EntidadeEmUsoException(msg: String, cause: Throwable? = null) : NegocioException(msg, cause)
