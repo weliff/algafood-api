@@ -6,7 +6,7 @@ import java.time.LocalDateTime
 import java.time.OffsetDateTime
 
 @JsonInclude(Include.NON_NULL)
-data class Problema(
+data class Problem(
         val status: Int,
         val title: String,
         val type: String? = null,
