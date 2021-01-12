@@ -21,6 +21,18 @@ class RestauranteApplicationService(val restauranteRepository: RestauranteReposi
         return restauranteRepository.save(restaurante)
     }
 
+    fun salvar(command: CadastroRestrauranteCommand) : Restaurante {
+        val restaurante = this.cozinhaRepository.findById(command.cozinha.id)
+                .map {
+                    Restaurante(nome = command.nome, taxaFrete = command.taxaFrete, cozinhaId = it.id, endereco =
+                    command.endereco)
+                }
+                .orElseThrow {
+                    throw EntidadeNaoEncontradaException("Não encontrada cozinha de id ${command.cozinha.id}") }
+
+        return restauranteRepository.save(restaurante)
+    }
+
     fun atualizar(restauranteId: Long, restaurante: Restaurante) : Restaurante {
         return this.restauranteRepository.findById(restauranteId)
             .map {

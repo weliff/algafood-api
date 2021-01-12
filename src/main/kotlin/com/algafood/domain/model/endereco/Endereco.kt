@@ -24,7 +24,6 @@ data class Endereco (
     @Column(name = "endereco_bairro")
     val bairro: String,
 
-    @ManyToOne
-    @JoinColumn(name = "endereco_cidade_id")
-    val cidade: Cidade
+    @Column(name = "endereco_cidade_id")
+    val cidadeId: Long
 )

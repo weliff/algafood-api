@@ -12,6 +12,9 @@ import java.math.BigDecimal
 import java.time.LocalDateTime
 import javax.persistence.*
 import javax.validation.constraints.Min
+import javax.validation.constraints.NotBlank
+import javax.validation.constraints.NotEmpty
+import javax.validation.constraints.PositiveOrZero
 
 @DynamicUpdate
 @Entity
@@ -21,8 +24,10 @@ data class Restaurante(
         @GeneratedValue(strategy = GenerationType.IDENTITY)
         val id: Long = UNDEFINED_ID,
 
+        @NotBlank
         val nome: String,
 
+        @PositiveOrZero
         val taxaFrete: BigDecimal,
 
         @JsonIgnore
@@ -42,11 +47,11 @@ data class Restaurante(
 
         @JsonIgnore
         @CreationTimestamp
-        val dataCadastro: LocalDateTime, // = LocalDateTime.now(), //atribuir no construtor?
+        val dataCadastro: LocalDateTime = LocalDateTime.now(), //atribuir no construtor?
 
         @JsonIgnore
         @UpdateTimestamp
-        val dataAtualizacao: LocalDateTime
+        val dataAtualizacao: LocalDateTime = LocalDateTime.now()
 ) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

@@ -4,6 +4,7 @@ import com.algafood.domain.model.EntidadeEmUsoException
 import com.algafood.domain.model.EntidadeNaoEncontradaException
 import com.algafood.domain.model.NegocioException
 import com.fasterxml.jackson.databind.exc.InvalidFormatException
+import com.fasterxml.jackson.databind.exc.PropertyBindingException
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -23,14 +24,32 @@ class ResourceExceptionHandler : ResponseEntityExceptionHandler() {
         if (ex is InvalidFormatException) {
             return handleInvalidFormatException(ex, headers, status, request)
         }
+        if (ex is PropertyBindingException) {
+            return handlePropertyBindingException(ex, headers, status, request)
+        }
         val problema = Problem(status.value(), "Mensagem incompreensível",
                 "http://www.algafood.com/mensagem-incompreensivel",
                 "O corpo da requisição está inválido. Verifique a sintaxe")
         return handleExceptionInternal(ex, problema, headers, status, request)
     }
 
-    fun handleInvalidFormatException(ex: InvalidFormatException, headers: HttpHeaders, status: HttpStatus, request:
-    WebRequest): ResponseEntity<Any> {
+    private fun handlePropertyBindingException(ex: PropertyBindingException, headers: HttpHeaders, status: HttpStatus,
+                                               request: WebRequest): ResponseEntity<Any> {
+        val propertyPath = ex.path
+                .map { it.fieldName }
+                .joinToString(".")
+
+        val problema = Problem(status.value(),
+                "Mensagem incompreensível",
+                "http://www.algafood.com/mensagem-incompreensivel",
+                "A propriedade '$propertyPath' recebeu o valor '${ex.propertyName}' que é do tipo inválido. Corrija e " +
+                        "informe um valor compatível com o tipo ${ex.targetType.simpleName}")
+
+        return handleExceptionInternal(ex, problema, headers, status, request)
+    }
+
+    fun handleInvalidFormatException(ex: InvalidFormatException, headers: HttpHeaders, status: HttpStatus,
+                                     request: WebRequest): ResponseEntity<Any> {
         val propertyPath = ex.path
                 .map { it.fieldName }
                 .joinToString(".")

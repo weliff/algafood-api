@@ -8,9 +8,14 @@ import com.algafood.domain.model.restaurante.RestauranteNaoEncontradoException
 import com.algafood.domain.model.restaurante.RestauranteRepository
 import com.fasterxml.jackson.databind.ObjectMapper
 import org.apache.commons.text.CaseUtils
+import org.springframework.core.io.ClassPathResource
+import org.springframework.core.io.Resource
+import org.springframework.core.io.ResourceLoader
 import org.springframework.http.ResponseEntity
-import org.springframework.http.ResponseEntity.ok
+import org.springframework.http.ResponseEntity.*
+import org.springframework.util.ClassUtils
 import org.springframework.util.ReflectionUtils
+import org.springframework.util.ResourceUtils
 import org.springframework.web.bind.annotation.*
 import javax.validation.Valid
 
@@ -26,8 +31,8 @@ class RestauranteResource(val restauranteRepository: RestauranteRepository,
     @GetMapping("/{restauranteId}")
     fun buscar(@PathVariable restauranteId: Long) : ResponseEntity<Restaurante> {
         return restauranteRepository.findById(restauranteId)
-            .map { ResponseEntity.ok(it) }
-            .orElseGet { ResponseEntity.notFound().build() }
+            .map { ok(it) }
+            .orElseGet { notFound().build() }
     }
 
     @PostMapping
@@ -47,11 +52,12 @@ class RestauranteResource(val restauranteRepository: RestauranteRepository,
         return restauranteRepository.findById(restauranteId)
             .map { merge(campos, it) }
             .map { restauranteRepository.save(it) }
-            .map { ResponseEntity.ok(it) }
-            .orElseGet { ResponseEntity.notFound().build() }
+            .map { ok(it) }
+            .orElseGet { notFound().build() }
     }
 
     private fun merge(campos: Map<String, Any>, aRestaurante: Restaurante) : Restaurante {
+        //Melhor utilizar um comando com campos opcionais
         val restaurante = aRestaurante.copy()
         campos.forEach { campo, valor ->
             val campoCamelCase = CaseUtils.toCamelCase(campo, false, '_')
@@ -68,12 +74,12 @@ class RestauranteResource(val restauranteRepository: RestauranteRepository,
 
     @ExceptionHandler(RestauranteNaoEncontradoException::class)
     fun handleRestauranteNaoEncontrado(e: RestauranteNaoEncontradoException) : ResponseEntity<Any> {
-        return ResponseEntity.notFound().build()
+        return notFound().build()
     }
 
     @ExceptionHandler(CozinhaNaoEncontradaException::class)
     fun handleCozinhaNaoEncontrada(e: CozinhaNaoEncontradaException) : ResponseEntity<Any> {
-        return ResponseEntity.badRequest().body(e.message)
+        return badRequest().body(e.message)
     }
 
 }
